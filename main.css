@@ -1,0 +1,29 @@
+body {
+  /* outline: 2px solid red; */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+.page {
+  margin-top: -20vh;
+}
+.title {
+  margin-bottom: 1.5rem;
+}
+.game-info {
+  text-align: center;
+}
+.game-info p {
+  font-size: 1.5rem;
+  max-width: 40em;
+  margin: 0 auto;
+}
+.game-info code {
+  font-size: 1.5rem;
+  margin: 0 auto;
+  border: 2px solid var(--primary-4);
+  border-radius: var(--extraBorderRadius);
+  padding: 0.1rem 0.7rem;
+  background-color: var(--backgroundColorDarker);
+  margin-top: 1rem;
+}
