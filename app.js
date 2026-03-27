@@ -15,24 +15,33 @@ await pageIsLoaded;
  *
  */
 
-// Get rock, paper, or scissor
-function rollDice() {
-  let roll = 0;
-  // Get a dice roll in range [0.1, 1)
-  while (roll < 0.1) {
-    // Math.random --> [Inclusive, Exclusive) --> [0, 1)
-    roll = Math.random();
-  }
-  return roll;
-}
+//
+// GAME VARIABLES
+//
 
+// Constants
+// Choices
 const ROCK = 'ROCK';
 const PAPER = 'PAPER';
 const SCISSORS = 'SCISSORS';
+// Players + Outcomes
+const HUMAN = 'HUMAN';
+const COMPUTER = 'COMPUTER';
+const DRAW = 'DRAW';
+// Track Score
+let humanScore = 0;
+let computerScore = 0;
+
+// Roll the dice...
+function rollDice(diceLength) {
+  const roll = Math.floor(Math.random() * diceLength);
+  return roll;
+}
 
 function getRandomHand() {
-  const roll = rollDice();
-  return roll < 0.34 ? ROCK : roll < 0.67 ? PAPER : SCISSORS;
+  const choices = [ROCK, PAPER, SCISSORS];
+  const randomIndex = rollDice(choices.length);
+  return choices[randomIndex];
 }
 
 // 1. Computer Choice
@@ -42,13 +51,14 @@ function getComputerChoice() {
 }
 
 // 2. Human Choice
-// getHumanChoice --> Use parseInt(prompt)
 function getHumanChoice() {
   let choice = prompt(
-    '\nEnter your choice: Rock, Paper, or Scissors.\n\n(Note: You get a random hand if your input is invalid.)\n',
+    '\nPick your hand: Rock, Paper, or Scissors.\n\n(Note: You get a random hand if your input is invalid.)\n\nYour Choice?\n',
   );
 
-  choice = choice.toUpperCase();
+  if (choice) {
+    choice = choice.toUpperCase();
+  }
   if (choice !== ROCK && choice !== PAPER && choice !== SCISSORS) {
     choice = getRandomHand();
   }
@@ -56,11 +66,84 @@ function getHumanChoice() {
   return choice;
 }
 
-// 3. Track Score
-// humanScore & computerScore
+// *. Get Choice --> Abstract
+function getChoice(player) {
+  return player === COMPUTER ? getComputerChoice() : getHumanChoice();
+}
 
-// 4. Logic for a single round
+// 3. Logic for a single round
 // playRound(humanChoice, computerChoice)
+function calcRoundOutcome(humanChoice, computerChoice) {
+  // Handle Draw
+  if (humanChoice === computerChoice) {
+    return DRAW;
+  }
+  // 'Human' win conditions
+  if (
+    (humanChoice === ROCK && computerChoice === SCISSORS) ||
+    (humanChoice === PAPER && computerChoice === ROCK) ||
+    (humanChoice === SCISSORS && computerChoice === PAPER)
+  )
+    return HUMAN;
+  // Otherwise 'Computer' wins
+  return COMPUTER;
+}
 
-// 5. Play 5 rounds in total
-// playGame --> 5 * playRound
+function updateWinnerScore(winner) {
+  if (winner === HUMAN) {
+    humanScore++;
+  } else if (winner === COMPUTER) {
+    computerScore++;
+  }
+  return;
+}
+
+function logRoundOutcome(humanChoice, computerChoice, winner) {
+  let msg;
+  if (winner === HUMAN) {
+    msg = `You win!\n${humanChoice} beats ${computerChoice}.`;
+  } else if (winner === COMPUTER) {
+    msg = `You lose!\n${humanChoice} loses to ${computerChoice}.`;
+  } else {
+    msg = 'Draw!';
+  }
+  console.log(msg);
+}
+
+function updateGameState(humanChoice, computerChoice, winner) {
+  updateWinnerScore(winner);
+  logRoundOutcome(humanChoice, computerChoice, winner);
+}
+
+function playRound() {
+  const humanChoice = getChoice(HUMAN);
+  const computerChoice = getChoice(COMPUTER);
+  const winner = calcRoundOutcome(humanChoice, computerChoice);
+  updateGameState(humanChoice, computerChoice, winner);
+}
+
+// 4. Game Loop
+// Let our game have 5 rounds by default.
+// We play 1 game (of 5 rounds), and print the outcome.
+function logGameOutcome() {
+  let msg;
+  if (humanScore > computerScore) {
+    msg = 'You won the GAME!!!';
+  } else if (humanScore < computerScore) {
+    msg = 'You lost the GAME :(';
+  } else {
+    msg = 'Game ends as a DRAW...';
+  }
+  console.log(
+    `${msg}\nYour score: ${humanScore}.\nComputer score: ${computerScore}`,
+  );
+}
+
+function playGame(totalRounds = 5) {
+  for (let i = 0; i < totalRounds; i++) {
+    playRound();
+  }
+  logGameOutcome();
+}
+
+playGame();
