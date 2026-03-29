@@ -2,28 +2,93 @@ body {
   /* outline: 2px solid red; */
   height: 100vh;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 .page {
-  margin-top: -20vh;
+  /* margin-top: -20vh; */
 }
-.title {
-  margin-bottom: 1.5rem;
+/* Main */
+main {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 1.5rem;
 }
-.game-info {
+
+/* Title */
+
+/* Game Info */
+.rule {
   text-align: center;
-}
-.game-info p {
-  font-size: 1.5rem;
-  max-width: 40em;
-  margin: 0 auto;
-}
-.game-info code {
-  font-size: 1.5rem;
-  margin: 0 auto;
+  font-size: 1.2rem;
   border: 2px solid var(--primary-4);
   border-radius: var(--extraBorderRadius);
   padding: 0.1rem 0.7rem;
   background-color: var(--backgroundColorDarker);
-  margin-top: 1rem;
+}
+
+/* Game Area */
+.game-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+/* Player */
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+}
+.player-name {
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+.player p {
+  font-size: 1.1rem;
+}
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 3rem;
+}
+/* human-area */
+#human-area .btn {
+  /* background-color: lightgray; */
+  border: 2px solid var(--primary-4);
+  background-color: var(--primary-1);
+  transition: transform 0.3s ease-in-out;
+}
+#human-area .btn:hover {
+  transform: scale(1.05);
+  background-color: var(--backgroundColorDarker);
+}
+/* computer-area */
+#computer-area .btn[disabled] {
+  /* background-color: var(--primary-2); */
+  background-color: var(--primary-1);
+  box-shadow: none;
+}
+/* outcome */
+.round-outcome,
+.game-outcome {
+  text-align: center;
+}
+/* round-outcome */
+.round-outcome {
+  font-weight: 500;
+  font-size: 1.2rem;
+  max-width: 25ch;
+}
+
+/* Game Result */
+.game-outcome {
+  font-weight: bold;
+  font-size: 1.5rem;
 }

@@ -14,19 +14,58 @@
     <title>Rock Paper Scissors</title>
   </head>
   <body>
-    <div class="page">
-      <div class="title">
-        <h1>Let's play: Rock-Paper-Scissors</h1>
+    <main class="page">
+      <!-- Title -->
+      <section class="title">
+        <h1>Rock-Paper-Scissors</h1>
         <div class="title-underline"></div>
-      </div>
-      <div class="game-info">
-        <p>
-          Once you are done playing 5 hands, check the result in your browser's
-          console.
-        </p>
-        <br />
-        <code>Ctrl+Shift+J</code>
-      </div>
-    </div>
+      </section>
+      <!-- Game Info -->
+      <section class="game-info">
+        <p class="rule">Just one rule: First to score 5 points wins.</p>
+      </section>
+      <!-- Game Area -->
+      <section class="game-area">
+        <!-- Player (Human) -->
+        <div class="player" id="human-area">
+          <p class="player-name">You</p>
+          <div class="choices">
+            <button type="button" class="btn">✊</button>
+            <button type="button" class="btn">🖐</button>
+            <button type="button" class="btn">✌️</button>
+          </div>
+          <p>
+            Score:
+            <span>0</span>
+          </p>
+        </div>
+        <!-- Round-Outcome -->
+        <div class="round-outcome">
+          <p>It's a Draw!</p>
+          <p>Scissors beats paper</p>
+        </div>
+        <!-- Player (Computer) -->
+        <div class="player" id="computer-area">
+          <p class="player-name">Computer</p>
+          <div class="choices">
+            <button type="button" class="btn" disabled>✊</button>
+            <button type="button" class="btn" disabled>🖐</button>
+            <button type="button" class="btn" disabled>✌️</button>
+          </div>
+          <p>
+            Score:
+            <span>0</span>
+          </p>
+        </div>
+      </section>
+      <!-- Game Result -->
+      <section class="game-result">
+        <!-- Game-Outcome -->
+        <div class="game-outcome">
+          <p>Game ends as a DRAW...</p>
+          <p>Can you win?</p>
+        </div>
+      </section>
+    </main>
   </body>
 </html>
