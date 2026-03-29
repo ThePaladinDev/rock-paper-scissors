@@ -30,19 +30,19 @@
         <div class="player" id="human-area">
           <p class="player-name">You</p>
           <div class="choices">
-            <button type="button" class="btn">✊</button>
-            <button type="button" class="btn">🖐</button>
-            <button type="button" class="btn">✌️</button>
+            <button type="button" class="btn" id="rock">✊</button>
+            <button type="button" class="btn" id="paper">🖐</button>
+            <button type="button" class="btn" id="scissors">✌️</button>
           </div>
           <p>
             Score:
-            <span>0</span>
+            <span id="human-score">0</span>
           </p>
         </div>
         <!-- Round-Outcome -->
         <div class="round-outcome">
-          <p>It's a Draw!</p>
-          <p>Scissors beats paper</p>
+          <p class="status">Start!</p>
+          <p class="message">(Go Pick)</p>
         </div>
         <!-- Player (Computer) -->
         <div class="player" id="computer-area">
@@ -54,7 +54,7 @@
           </div>
           <p>
             Score:
-            <span>0</span>
+            <span id="computer-score">0</span>
           </p>
         </div>
       </section>
@@ -62,9 +62,15 @@
       <section class="game-result">
         <!-- Game-Outcome -->
         <div class="game-outcome">
-          <p>Game ends as a DRAW...</p>
-          <p>Can you win?</p>
+          <p class="status">Can you win?</p>
+          <p class="message">x-x-x</p>
         </div>
+      </section>
+      <!-- Game Reset -->
+      <section class="game-reset">
+        <button type="button" class="btn hidden" id="game-reset-btn">
+          Reset Game
+        </button>
       </section>
     </main>
   </body>

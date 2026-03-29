@@ -68,11 +68,21 @@ main {
   transform: scale(1.05);
   background-color: var(--backgroundColorDarker);
 }
-/* computer-area */
-#computer-area .btn[disabled] {
-  /* background-color: var(--primary-2); */
+#human-area .btn[disabled] {
+  border: transparent;
   background-color: var(--primary-1);
   box-shadow: none;
+  cursor: not-allowed;
+  /* pointer-events: none; */
+}
+#human-area .btn[disabled]:hover {
+  transform: none;
+}
+/* computer-area */
+#computer-area .btn[disabled] {
+  background-color: var(--primary-1);
+  box-shadow: none;
+  cursor: not-allowed;
 }
 /* outcome */
 .round-outcome,
@@ -83,11 +93,24 @@ main {
 .round-outcome {
   font-weight: 500;
   font-size: 1.2rem;
-  max-width: 25ch;
+  width: 16ch;
 }
 
 /* Game Result */
 .game-outcome {
   font-weight: bold;
   font-size: 1.5rem;
+}
+
+/* Game Reset */
+.hidden {
+  display: none;
+}
+
+/* Winning & Losing states (for body) */
+.won-the-game {
+  background-color: var(--green-light);
+}
+.lost-the-game {
+  background-color: var(--red-light);
 }
