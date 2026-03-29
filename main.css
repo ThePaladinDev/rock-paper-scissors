@@ -2,10 +2,9 @@ body {
   /* outline: 2px solid red; */
   height: 100vh;
   display: flex;
-  /* align-items: center; */
 }
 .page {
-  /* margin-top: -20vh; */
+  padding-top: 10rem;
 }
 /* Main */
 main {
