@@ -1,20 +1,3 @@
-// 'helper' to wait for the 'load' event
-const pageIsLoaded = new Promise((resolve) => {
-  if (document.readyState == 'complete') resolve();
-  else window.addEventListener('load', resolve);
-});
-
-// 'Pause' the script execution right here,
-// until the page is painted.
-await pageIsLoaded;
-
-/* * * * * * * * * *
- *
- * CODE STARTS HERE
- *
- *
- */
-
 //
 // GAME VARIABLES
 //
@@ -28,9 +11,21 @@ const SCISSORS = 'SCISSORS';
 const HUMAN = 'HUMAN';
 const COMPUTER = 'COMPUTER';
 const DRAW = 'DRAW';
+const GAME_END_SCORE = 5;
 // Track Score
 let humanScore = 0;
 let computerScore = 0;
+
+// Document Element Variables
+const humanChoicesContainer = document.querySelector('#human-area');
+const humanPlayerBtns = document.querySelectorAll('#human-area .btn');
+const humanPlayerScore = document.querySelector('#human-score');
+const computerPlayerScore = document.querySelector('#computer-score');
+const roundOutcomeStatus = document.querySelector('.round-outcome .status');
+const roundOutcomeMessage = document.querySelector('.round-outcome .message');
+const gameOutcomeStatus = document.querySelector('.game-outcome .status');
+const gameOutcomeMessage = document.querySelector('.game-outcome .message');
+const gameResetBtn = document.querySelector('#game-reset-btn');
 
 // Roll the dice...
 function rollDice(diceLength) {
@@ -51,28 +46,19 @@ function getComputerChoice() {
 }
 
 // 2. Human Choice
-function getHumanChoice() {
-  let choice = prompt(
-    '\nPick your hand: Rock, Paper, or Scissors.\n\n(Note: You get a random hand if your input is invalid.)\n\nYour Choice?\n',
-  );
-
-  if (choice) {
-    choice = choice.toUpperCase();
+// This is the main thing that drives the game.
+// Each round will begin from this
+humanChoicesContainer.addEventListener('click', (e) => {
+  if (!e.target.closest('.btn')) return;
+  const btn = e.target;
+  const humanChoice = btn.id;
+  playRound(humanChoice.toUpperCase());
+  if (gameResetBtn.classList.contains('hidden')) {
+    gameResetBtn.classList.remove('hidden');
   }
-  if (choice !== ROCK && choice !== PAPER && choice !== SCISSORS) {
-    choice = getRandomHand();
-  }
-
-  return choice;
-}
-
-// *. Get Choice --> Abstract
-function getChoice(player) {
-  return player === COMPUTER ? getComputerChoice() : getHumanChoice();
-}
+});
 
 // 3. Logic for a single round
-// playRound(humanChoice, computerChoice)
 function calcRoundOutcome(humanChoice, computerChoice) {
   // Handle Draw
   if (humanChoice === computerChoice) {
@@ -98,52 +84,105 @@ function updateWinnerScore(winner) {
   return;
 }
 
+function capitalize(word) {
+  if (word.length === 0) return word;
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
+}
+
 function logRoundOutcome(humanChoice, computerChoice, winner) {
-  let msg;
+  let status;
+  const message = `${capitalize(humanChoice)} X ${capitalize(computerChoice)}.`;
   if (winner === HUMAN) {
-    msg = `You win!\n${humanChoice} beats ${computerChoice}.`;
+    status = 'You Win!';
   } else if (winner === COMPUTER) {
-    msg = `You lose!\n${humanChoice} loses to ${computerChoice}.`;
+    status = 'You Lose!';
   } else {
-    msg = 'Draw!';
+    status = "It's a Draw!";
   }
-  console.log(msg);
+  // console.log(status, message);
+  humanPlayerScore.textContent = humanScore;
+  computerPlayerScore.textContent = computerScore;
+  roundOutcomeStatus.textContent = status;
+  roundOutcomeMessage.textContent = message;
+}
+
+function checkGameEnd() {
+  return humanScore >= GAME_END_SCORE || computerScore >= GAME_END_SCORE;
 }
 
 function updateGameState(humanChoice, computerChoice, winner) {
   updateWinnerScore(winner);
   logRoundOutcome(humanChoice, computerChoice, winner);
+  const isGameEnd = checkGameEnd();
+  if (isGameEnd) {
+    setGameState('game-end');
+  }
 }
 
-function playRound() {
-  const humanChoice = getChoice(HUMAN);
-  const computerChoice = getChoice(COMPUTER);
+function playRound(humanChoice) {
+  const computerChoice = getComputerChoice();
   const winner = calcRoundOutcome(humanChoice, computerChoice);
   updateGameState(humanChoice, computerChoice, winner);
 }
 
-// 4. Game Loop
-// Let our game have 5 rounds by default.
-// We play 1 game (of 5 rounds), and print the outcome.
+// 4. Game End Logging
 function logGameOutcome() {
-  let msg;
+  let status;
+  let message;
   if (humanScore > computerScore) {
-    msg = 'You won the GAME!!!';
+    status = 'You won the GAME';
+    message = 'Hurray!!!';
   } else if (humanScore < computerScore) {
-    msg = 'You lost the GAME :(';
+    status = 'You lost the GAME :(';
+    message = 'Try Again?';
   } else {
-    msg = 'Game ends as a DRAW...';
+    status = 'Game ends as a DRAW...';
+    message = 'Aww... Almost had it.';
   }
-  console.log(
-    `${msg}\nYour score: ${humanScore}.\nComputer score: ${computerScore}`,
-  );
+  // console.log(status, message);
+  // console.log(`Your score: ${humanScore}.`);
+  // console.log(`Computer score: ${computerScore}`);
+  gameOutcomeStatus.textContent = status;
+  gameOutcomeMessage.textContent = message;
 }
 
-function playGame(totalRounds = 5) {
-  for (let i = 0; i < totalRounds; i++) {
-    playRound();
+function setPlayerBtns(newState) {
+  for (const playerBtn of humanPlayerBtns) {
+    playerBtn.disabled = newState === 'disabled';
   }
-  logGameOutcome();
 }
 
-playGame();
+gameResetBtn.addEventListener('click', (e) => {
+  if (!e.target.closest('#game-reset-btn')) return;
+  setGameState('game-begin');
+});
+
+function setGameState(gameState) {
+  if (gameState === 'game-begin') {
+    document.body.classList.remove('won-the-game');
+    document.body.classList.remove('lost-the-game');
+    setPlayerBtns('enabled');
+    humanScore = 0;
+    computerScore = 0;
+    humanPlayerScore.textContent = 0;
+    computerPlayerScore.textContent = 0;
+    roundOutcomeStatus.textContent = 'Start!';
+    roundOutcomeMessage.textContent = '(Go Pick)';
+    gameOutcomeStatus.textContent = 'Can you win?';
+    gameOutcomeMessage.textContent = 'x-x-x';
+    gameResetBtn.classList.add('hidden');
+    gameResetBtn.textContent = 'Reset Game';
+  } else if (gameState === 'game-end') {
+    setPlayerBtns('disabled');
+    const winLoseClass =
+      humanScore >= GAME_END_SCORE ? 'won-the-game' : 'lost-the-game';
+    document.body.classList.add(winLoseClass);
+    roundOutcomeStatus.textContent = '';
+    roundOutcomeMessage.textContent = '';
+    logGameOutcome();
+    gameResetBtn.textContent = 'New Game';
+    gameResetBtn.classList.remove('hidden');
+  }
+}
+
+setGameState('game-begin');
